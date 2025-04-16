@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import axios from "axios";
 import {
   BarChart,
@@ -33,8 +33,9 @@ export default function ProductListing() {
         }));
         setProducts(parsedData);
         setLoading(false);
+        setError(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError(true);
         setLoading(false);
       });
@@ -51,8 +52,9 @@ export default function ProductListing() {
         setProducts(parsedData);
         setLoading(false);
         setOpenForm(false);
+        setError(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError(true);
         setLoading(false);
       });
@@ -142,7 +144,7 @@ export default function ProductListing() {
       {openForm && <Form getProducts={getProducts}/>}
       {loading ? (
         "loading"
-      ) : (
+      ) : error ?"error fetching data": (
         <div>
           {filteredProducts.map((p: any) => (
             <div
@@ -219,7 +221,7 @@ export default function ProductListing() {
                 >
                   {capacityChartData.map((entry, index) => (
                     <Cell
-                      key={`cell-${index}`}
+                      key={`cell-${index}-${entry}`}
                       fill={COLORS[index % COLORS.length]}
                     />
                   ))}
