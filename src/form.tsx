@@ -7,7 +7,10 @@ const form = (props:any) => {
       const [formData, setFormData] = useState({
         id: '',
         name: '',
-        data: ''
+        data: {
+          capacity: '',
+          color: ''
+        }
       });
     const [loading, setLoading]=useState(false);
       const handleChange = (e:any) => {
@@ -22,10 +25,10 @@ const form = (props:any) => {
           const payload = {
             id: Number(formData.id),
             name: formData.name,
-            data: formData.data // Ensure it's valid JSON
+            data: (formData.data.color.length!==0 &&formData.data.capacity.length!==0 )? JSON.stringify(formData.data):null // Ensure it's valid JSON
           };
     
-          await axios.post('http://localhost:9091/api/products', payload);
+          await axios.post('https://react-charts-backend-production.up.railway.app/api/products', payload);
           setLoading(false);
           props.getProducts();
 
@@ -33,14 +36,26 @@ const form = (props:any) => {
           setFormData({
             id: '',
             name: '',
-            data: ''
+            data: {
+              capacity: '',
+              color: ''
+            }
           })
         } catch (error:any) {
           alert('Error adding product: ' + error.message);
           setLoading(false);
         }
       };
-    
+      const handleDataChange = (e:any) => {
+        const { name, value } = e.target;
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          data: {
+            ...prevFormData.data,
+            [name]: value
+          }
+        }));
+      };
       return (
         <div style={{ border: '1px solid #ccc', padding: 16, marginBottom: 24 }}>
           <h2 style={{ fontSize: 20 }}>Add New Product</h2>
@@ -68,16 +83,28 @@ const form = (props:any) => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>Data (JSON): </label><br />
-              <textarea
-                name="data"
-                value={formData.data}
-                onChange={handleChange}
-                placeholder='e.g. { "color": "Black", "capacity": "128 GB" }'
-                style={{ padding: 8, width: '97%', height: 100 }}
-                required
+              <label>Color: </label><br />
+              <input
+                type="text"
+                name="color"
+                value={formData.data.color}
+                onChange={handleDataChange}
+                style={{ padding: 8, width: '97%' }}
+                
               />
             </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Capacity: </label><br />
+              <input
+                type="text"
+                name="capacity"
+                value={formData.data.capacity}
+                onChange={handleDataChange}
+                style={{ padding: 8, width: '97%' }}
+                
+              />
+            </div>
+           
             <button type="submit" style={{ padding: '8px 16px', background: 'black', color: 'white', border: 'none' }}>
               {loading ? "submitting" :"Submit"}
             </button>

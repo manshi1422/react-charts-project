@@ -25,7 +25,7 @@ export default function ProductListing() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:9091/api/products")
+      .get("https://react-charts-backend-production.up.railway.app/api/products")
       .then((res) => {
         const parsedData = res.data.map((item: any) => ({
           ...item,
@@ -42,7 +42,7 @@ export default function ProductListing() {
   const getProducts = async () => {
     setLoading(true);
     axios
-      .get("http://localhost:9091/api/products")
+      .get("https://react-charts-backend-production.up.railway.app/api/products")
       .then((res) => {
         const parsedData = res.data.map((item: any) => ({
           ...item,
